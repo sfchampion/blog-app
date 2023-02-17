@@ -4,7 +4,7 @@
 
       <el-col :span="2" class="me-header-left">
         <router-link to="/" class="me-title">
-          <img src="../assets/img/logo.png" />
+          <img src="../assets/img/logo.jpg" />
         </router-link>
       </el-col>
 

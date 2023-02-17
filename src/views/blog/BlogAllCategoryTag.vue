@@ -43,7 +43,7 @@
 </template>
 
 <script>
-  import defaultAvatar from '@/assets/img/logo.png'
+  import defaultAvatar from '@/assets/img/logo.jpg'
   import {getAllCategorysDetail} from '@/api/category'
   import {getAllTagsDetail} from '@/api/tag'
 
@@ -72,10 +72,10 @@
       },
       categoryTagTitle (){
         if(this.currentActiveName == 'category'){
-          return '文章分类 - 码神之路'
+          return '文章分类 - sfChampion'
         }
         console.info('dddd')
-        return '标签 - 码神之路'
+        return '标签 - sfChampion'
       }
     },
     methods: {
