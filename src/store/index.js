@@ -11,7 +11,7 @@ export default new Vuex.Store({
     account: '',
     name: '',
     avatar: '',
-    token: getToken(),
+    token: getToken()
   },
   mutations: {
     SET_TOKEN: (state, token) => {
@@ -32,8 +32,10 @@ export default new Vuex.Store({
   },
   actions: {
     login({commit}, user) {
+      debugger
       return new Promise((resolve, reject) => {
         login(user.account, user.password).then(data => {
+          debugger
           if(data.success){
             commit('SET_TOKEN', data.data)
             setToken(data.data)

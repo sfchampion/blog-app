@@ -12,6 +12,14 @@ export function login(account, password) {
   })
 }
 
+export function phoneLoginApi(sysUser) {
+  return request({
+    url: '/login/PhoneLogin',
+    method: 'post',
+    data: sysUser
+  })
+}
+
 export function logout(token) {
   return request({
     headers: {'Authorization': token},
