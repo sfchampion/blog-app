@@ -30,7 +30,7 @@
                   </a>
 
                   <div class="me-allct-meta">
-                    <span>{{t.articles}}  文章</span>
+                    <span>{{t.articles}}  标签</span>
                   </div>
                 </div>
               </li>

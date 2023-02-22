@@ -51,12 +51,6 @@
               <el-button type="text" @click="showLogin()" id="loginDialog">手机登录/注册</el-button>
             </el-menu-item>
           </template>
-          <!-- <span v-if="name == ''" class="v-link clickable" @click="showLogin()" id="loginDialog">登录/注册</span> -->
-          <!-- <template v-if="name == ''">
-            <el-menu-item>
-              <el-button type="text"><span class="v-link clickable" @click="showLogin()" id="loginDialog">手机登录/注册</span></el-button>
-            </el-menu-item>
-          </template> -->
           <template v-else>
             <el-submenu index>
               <template slot="title">
@@ -69,46 +63,27 @@
       </el-col>
     </el-row>
     
-    <el-dialog v-if="dialogUserFormVisible" :visible.sync="dialogUserFormVisible" style="text-align: left;" top="50px" :append-to-body="true" width="960px" @close="closeDialog()">
+    <el-dialog v-if="dialogUserFormVisible" :visible.sync="dialogUserFormVisible" style="text-align: left;" top="50px" :append-to-body="true" width="500px" @close="closeDialog()">
       <div class="container">
 
         <!-- 手机登录 #start -->
-        <div class="operate-view" v-if="dialogAtrr.showLoginType === 'phone'">
-          <div class="wrapper" style="width: 100%">
-            <div class="mobile-wrapper" style="position: static;width: 70%">
-              <span class="title">{{ dialogAtrr.labelTips }}</span>
+        <div v-if="dialogAtrr.showLoginType === 'phone'">
+          <div style="width: 100%">
+            <div style="position: static;width: 100%">
+              <span class="PNumber">{{ dialogAtrr.labelTips }}</span>
               <el-form>
                 <el-form-item>
-                  <el-input v-model="dialogAtrr.inputValue" :placeholder="dialogAtrr.placeholder" :maxlength="dialogAtrr.maxlength" class="input v-input">
-                    <span slot="suffix" class="sendText v-link" v-if="dialogAtrr.second > 0">{{ dialogAtrr.second }}s </span>
-                    <span slot="suffix" class="sendText v-link highlight clickable selected" v-if="dialogAtrr.second == 0" @click="getCodeFun()">重新发送 </span>
+                  <el-input class="inputVal" v-model="dialogAtrr.inputValue" :placeholder="dialogAtrr.placeholder" :maxlength="dialogAtrr.maxlength" >
+                    <span slot="suffix"  v-if="dialogAtrr.second > 0">{{ dialogAtrr.second }}s </span>
+                    <span slot="suffix"  v-if="dialogAtrr.second == 0" @click="getCodeFun()">重新发送 </span>
                   </el-input>
                 </el-form-item>
               </el-form>
-              <div class="send-button v-button" @click="btnClick()"> {{ dialogAtrr.loginBtn }}</div>
+              <div  @click="btnClick()"><button class="verificationCode">{{ dialogAtrr.loginBtn }}</button> </div>
             </div>
-            <!-- <div class="bottom">
-              <div class="wechat-wrapper" @click="weixinLogin()"><span class="iconfont icon"></span></div>
-              <span class="third-text"> 第三方账号登录 </span>
-            </div> -->
           </div>
         </div>
         <!-- 手机登录 #end -->
-        <!-- 微信登录 #start -->
-        <!-- <div class="operate-view" v-if="dialogAtrr.showLoginType === 'weixin'">
-          <div class="wrapper wechat" style="height: 400px">
-            <div>
-              <div id="weixinLogin"></div>
-            </div>
-            <div class="bottom wechat" style="margin-top: -80px;">
-              <div class="phone-container">
-                <div class="phone-wrapper" @click="phoneLogin()"><span class="iconfont icon"></span></div>
-                <span class="third-text"> 手机短信验证码登录 </span>
-              </div>
-            </div>
-          </div>
-        </div> -->
-        <!-- 微信登录 #end -->
       </div>
     </el-dialog>
     
@@ -176,10 +151,6 @@ computed: {
     },
   },
 
-     created() {
-    this.showInfo()
-  },
-
 mounted() {
     // 注册全局登录事件对象
     window.loginEvent = new Vue();
@@ -188,36 +159,9 @@ mounted() {
       document.getElementById("loginDialog").click();
     })
     // 触发事件，显示登录层：loginEvent.$emit('loginDialogEvent')
-
-    // //初始化微信js
-    //     const script = document.createElement('script')
-    //     script.type = 'text/javascript'
-    //     script.src = 'https://res.wx.qq.com/connect/zh_CN/htmledition/js/wxLogin.js'
-    //     document.body.appendChild(script)
-
-    //     // 微信登录回调处理
-    //     let self = this;
-    //     window["loginCallback"] = (name,token, openid) => {
-    //         self.loginCallback(name, token, openid);
-    //     }
   },
 
-  
-
-  
-
   methods: {
-    // //微信回调的方法
-    //   loginCallback(name, token, openid) {
-    //   // 打开手机登录层，绑定手机号，改逻辑与手机登录一致
-    //   //前端判断：如果openid不为空，绑定手机号，如果openid为空，不需要绑定手机号
-    //   if(openid != '') {
-    //     this.userInfo.openid = openid
-    //     this.showLogin()
-    //   } else {
-    //     this.setCookies(name, token)
-    //   }
-    // },
     // 绑定登录或获取验证码按钮
     btnClick() {
       // 判断是获取验证码还是登录
@@ -241,7 +185,6 @@ mounted() {
     },
    // 登录
     login() {
-      debugger
       this.sysUser.code = this.dialogAtrr.inputValue
 
       if(this.dialogAtrr.loginBtn == '正在提交...') {
@@ -260,20 +203,18 @@ mounted() {
       phoneLoginApi(this.sysUser).then(response => {
         console.log(response.data)
         // 登录成功 设置cookie
-        this.$store.dispatch('login', this.sysUser)
-        this.setCookies(response.data.account, response.data.token)
-        debugger
+        this.dialogUserFormVisible = false
+        this.setCookies(response.data.phoneNumber, response.data.token,response.data.account)
+        this.$store.dispatch('phoneLogin', response)
         
-        // this.$router.push('login', this.sysUser)
       }).catch(e => {
         this.dialogAtrr.loginBtn = '马上登录'
       })
-      // that.$router.push({path: '/'})
     },
 
-    setCookies(account, token) {
-      debugger
+    setCookies(phoneNumber, token, account) {
       cookie.set('token', token, { domain: 'localhost' })
+      cookie.set('phoneNumber', phoneNumber, { domain: 'localhost' })
       cookie.set('account', account, { domain: 'localhost' })
       // window.location.reload()
     },
@@ -330,38 +271,6 @@ mounted() {
         clearInterval(this.clearSmsTime);
       }
     },
-
-    showInfo() {
-      let token = cookie.get('token')
-      if (token) {
-        this.account = cookie.get('account')
-        console.log(this.account)
-      }
-    },
-
-    loginMenu() {
-      
-        cookie.set('account', '', {domain: 'localhost'})
-        cookie.set('token', '', {domain: 'localhost'})
-
-        //跳转页面
-        window.location.href = '/'
-    },
-
-    // handleSelect(item) {
-    //   window.location.href = '/hospital/' + item.hoscode
-    // },
-
-    // weixinLogin() {
-    //   this.dialogAtrr.showLoginType = 'weixin'
-    // },
-
-    // phoneLogin() {
-    //   this.dialogAtrr.showLoginType = 'phone'
-    //   this.showLogin()
-    // },
-  
-
 
     logout() {
       let that = this;
@@ -427,4 +336,19 @@ mounted() {
   vertical-align: middle;
   background-color: #5fb878;
 }
+
+.PNumber{
+  font-size: 20px;
+  font-weight: 700
+}
+
+.verificationCode{
+  font-size: 20px;
+  background-color: #5fb878;
+}
+
+.inputVal{
+  font-size: 15px;
+}
+
 </style>

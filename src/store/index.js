@@ -11,7 +11,8 @@ export default new Vuex.Store({
     account: '',
     name: '',
     avatar: '',
-    token: getToken()
+    token: getToken(),
+    phoneNumber: ''
   },
   mutations: {
     SET_TOKEN: (state, token) => {
@@ -28,14 +29,15 @@ export default new Vuex.Store({
     },
     SET_ID: (state, id) => {
       state.id = id
+    },
+    SET_PHONE: (state, phoneNumber) => {
+      state.phoneNumber = phoneNumber
     }
   },
   actions: {
     login({commit}, user) {
-      debugger
       return new Promise((resolve, reject) => {
         login(user.account, user.password).then(data => {
-          debugger
           if(data.success){
             commit('SET_TOKEN', data.data)
             setToken(data.data)
@@ -48,6 +50,18 @@ export default new Vuex.Store({
         })
       })
     },
+    phoneLogin({commit}, response) {
+      return new Promise((resolve, reject) => {
+            commit('SET_ACCOUNT', response.data.account)
+            commit('SET_TOKEN', response.data.token)
+            commit('SET_PHONE', response.data.phoneNumber)
+            commit('SET_AVATAR', response.data.avatar)
+            setToken(response.data.token)
+            resolve()
+          })
+        },
+      
+        
     // 获取用户信息
     getUserInfo({commit, state}) {
 
@@ -59,6 +73,7 @@ export default new Vuex.Store({
             commit('SET_NAME', data.data.nickname)
             commit('SET_AVATAR', data.data.avatar)
             commit('SET_ID', data.data.id)
+            commit('SET_ID', data.data.phoneNumber)
             resolve(data)
           } else {
             commit('SET_ACCOUNT', '')
