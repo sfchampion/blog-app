@@ -73,7 +73,7 @@ export default new Vuex.Store({
             commit('SET_NAME', data.data.nickname)
             commit('SET_AVATAR', data.data.avatar)
             commit('SET_ID', data.data.id)
-            commit('SET_ID', data.data.phoneNumber)
+            commit('SET_PHONE', data.data.phoneNumber)
             resolve(data)
           } else {
             commit('SET_ACCOUNT', '')
