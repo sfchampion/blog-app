@@ -74,7 +74,6 @@
         if(this.currentActiveName == 'category'){
           return '文章分类 - sfChampion'
         }
-        console.info('dddd')
         return '标签 - sfChampion'
       }
     },
