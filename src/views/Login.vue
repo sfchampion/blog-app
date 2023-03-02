@@ -9,11 +9,15 @@
 
       <el-form ref="userForm" :model="userForm" :rules="rules">
         <el-form-item prop="account">
-          <el-input placeholder="用户名" v-model="userForm.account"></el-input>
+          <el-input placeholder="用户名" v-model="userForm.account">
+            <template slot="prepend">用户名</template>
+          </el-input>
         </el-form-item>
 
         <el-form-item prop="password">
-          <el-input placeholder="密码" type="password" v-model="userForm.password"></el-input>
+          <el-input placeholder="密码" type="password" v-model="userForm.password">
+            <template slot="prepend">密码</template>
+          </el-input>
         </el-form-item>
 
         <el-form-item size="small" class="me-login-button">
@@ -41,7 +45,7 @@
           ],
           password: [
             {required: true, message: '请输入密码', trigger: 'blur'},
-            {max: 10, message: '不能大于10个字符', trigger: 'blur'}
+            {min:8, max: 16, message: '请输入8-16位密码', trigger: 'blur'},
           ]
         }
       }
@@ -90,7 +94,7 @@
   .me-login-box {
     position: absolute;
     width: 300px;
-    height: 260px;
+    height: 230px;
     background-color: white;
     margin-top: 150px;
     margin-left: -180px;

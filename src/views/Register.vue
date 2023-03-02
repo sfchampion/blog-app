@@ -9,15 +9,21 @@
 
       <el-form ref="userForm" :model="userForm" :rules="rules">
         <el-form-item prop="account">
-          <el-input placeholder="用户名" v-model="userForm.account"></el-input>
+          <el-input placeholder="用户名" v-model="userForm.account">
+            <template slot="prepend">用户名</template>
+          </el-input>
         </el-form-item>
 
         <el-form-item prop="nickname">
-          <el-input placeholder="昵称" v-model="userForm.nickname"></el-input>
+          <el-input placeholder="昵称" v-model="userForm.nickname">
+            <template slot="prepend">昵称</template>
+          </el-input>
         </el-form-item>
 
         <el-form-item prop="password">
-          <el-input placeholder="密码" type="password" v-model="userForm.password"></el-input>
+          <el-input placeholder="同时含有数字和字母，且长度要在8-16位之间" type="password" v-model="userForm.password">
+            <template slot="prepend">密码</template>
+          </el-input>
         </el-form-item>
 
         <el-form-item size="small" class="me-login-button">
@@ -37,6 +43,19 @@
   export default {
     name: 'Register',
     data() {
+      const validatePass = (rule, value, callback) => {
+        // 由数字和字母组成，并且要同时含有数字和字母，且长度要在8-16位之间。
+        const regex = new RegExp("^(?![0-9]+$)(?![a-zA-Z]+$)[0-9A-Za-z]{8,16}$");
+        if (value === "") {
+          callback(new Error("请输⼊密码"));
+        } else if (value.length < 8 || value.length > 16) {
+          callback(new Error("请输⼊8~16位密码"));
+        } else if (!regex.test(value)) {
+          callback(new Error("密码必须同时含有数字和字母，且长度要在8-16位之间"));
+        } else {
+          callback();
+        }
+      };
       return {
         userForm: {
           account: '',
@@ -54,7 +73,7 @@
           ],
           password: [
             {required: true, message: '请输入密码', trigger: 'blur'},
-            {max: 10, message: '不能大于10个字符', trigger: 'blur'}
+            {min:8, max: 16,  trigger: 'blur', validator: validatePass}
           ]
         }
 
@@ -106,8 +125,8 @@
 
   .me-login-box {
     position: absolute;
-    width: 300px;
-    height: 320px;
+    width: 400px;
+    height: 350px;
     background-color: white;
     margin-top: 150px;
     margin-left: -180px;

@@ -42,7 +42,8 @@
       commentCounts: Number,
       viewCounts: Number,
       summary: String,
-      author: String,
+      // author: String,
+      author: Object,
       tags: Array,
       createDate: String
     },
